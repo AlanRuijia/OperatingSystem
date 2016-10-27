@@ -14,8 +14,34 @@
 #include <pthread.h>
 
 #define MAX_ITER 100000
-void thread1_func(){
 
+pthread_mutex_t lock;
+pthread_cond_t cond_zero;
+pthread_cond_t cond_one;
+int count;
+struct timespec start;
+struct timespec stop;
+
+void* zero(void* unused)
+{
+    pthread_mutex_lock(&lock);
+    while (count == 0){
+        printf("waiting\n");
+        pthread_cond_wait(&cond_zero, &lock);
+    }
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
+    count = 1;
+    pthread_mutex_unlock(&lock);
+}
+
+void* one(void* unused)
+{
+    pthread_mutex_lock(&lock);
+    printf("in one\n");
+    count = 0;
+    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
+    pthread_cond_signal(&cond_zero);
+    pthread_mutex_unlock(&lock);
 }
 
 unsigned long long timespecDiff(struct timespec *timeA_p, struct timespec *timeB_p)
@@ -26,13 +52,12 @@ unsigned long long timespecDiff(struct timespec *timeA_p, struct timespec *timeB
 
 int main()
 {
-    struct timespec start;
-    struct timespec stop;
+    
     unsigned long long result; //64 bit integer
     double final_result;
     int i,num = 0;
-    pthread_t tid; /* the thread identifier */
-    pthread_attr_t attr;
+    pthread_t tid[2]; /* the thread identifier */
+    pthread_attr_t attr[2];
 
     int test = 0;
 
@@ -60,10 +85,10 @@ int main()
         exit(EXIT_FAILURE);
     }
 
-    pthread_attr_init(&attr);
-    clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-
-    
+    // pthread_attr_init(&attr);
+    pthread_create(&tid[0], NULL, one, NULL);
+    pthread_create(&tid[1], NULL, zero, NULL);
+    result = timespecDiff(&stop, &start); 
     printf("CLOCK_MONOTONIC Measured: %llu\n",result/(2*MAX_ITER));
 
     return 0;
