@@ -1,0 +1,22 @@
+The executable filename is A1, the source file is A1.c.
+
+Running instrcutions:
+
+	1. make -- make the project
+	2. make run -- run the program
+	3. make clean -- this will clean the A1 and A1.o files
+
+Tests:
+	1. I test the program on my own Ubuntu laptop.
+
+		Proccessor Type : Intel(R) Core(TM) i3-3120M CPU @ 2.50GHz
+		Kernel version: Linux version 4.4.0-36-generic (buildd@lcy01-01) (gcc version 5.4.0 20160609 (Ubuntu 5.4.0-6ubuntu1~16.04.2) ) #55-Ubuntu SMP Thu Aug 11 18:01:55 UTC 2016
+		The amount of memory configured into this computer : 3859804 kB
+		Amount of time since the system was last booted: 2590.04 Seconds
+
+	2. I also test it using remote csil.
+
+		Proccessor Type : Intel(R) Xeon(R) CPU E5-4620 0 @ 2.20GHz
+		Kernel version: Linux version 3.13.0-91-generic (buildd@lgw01-21) (gcc version 4.8.4 (Ubuntu 4.8.4-2ubuntu1~14.04.3) ) #138-Ubuntu SMP Fri Jun 24 17:00:34 UTC 2016
+		The amount of memory configured into this computer : 4047492 kB
+		Amount of time since the system was last booted: 3139049.35 Seconds
