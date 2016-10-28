@@ -60,7 +60,7 @@ unsigned long long timespecDiff(struct timespec *timeA_p, struct timespec *timeB
 int main()
 {
     
-    long long result; //64 bit integer
+    unsigned long long result; //64 bit integer
     double final_result;
     int i,num = 0;
     pthread_t tid[2]; /* the thread identifier */

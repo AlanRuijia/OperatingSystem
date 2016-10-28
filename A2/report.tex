@@ -1,0 +1,47 @@
+
+\documentclass[a4paper,openany,10.5pt]{article}
+\usepackage{amsmath}
+\usepackage{color}
+\usepackage{textcomp}
+\usepackage{float}
+\usepackage{array}
+\usepackage{listings}
+
+\usepackage[final]{graphicx}
+\usepackage{subfig}
+
+\usepackage{ragged2e}%Alignment
+\usepackage[top=45px, bottom=45px, left=30px, right=30px]{geometry}
+%\thispagestyle{empty} 　%cancel page number 
+\newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
+
+\title{CMPT 419 Assignment 2}
+\author{Ruijia(Alan) Mao}
+
+\begin{document}
+	%Title
+	\begin{center}
+		\textbf{CMPT 419 Assignment 2 }
+	\end{center}
+	
+	%author
+	\begin{flushright}
+		\textbf{Name: Ruijia Mao }\\
+		\textbf{SFU ID: 301295769}
+	\end{flushright}
+	
+	\section{ }
+	The code basically measures $sleep(1)$ using different clock type using function $int\,clock_gettime(clockid_t clk_id, struct 	timespec *tp)$. The difference between these clock type are listed bellow:
+	\\ \\
+	CLOCK\_REALTIME: System-wide realtime clock. In the code it measures the real time spent to implement the $sleep(1)$, if we change the system time during $sleep(1)$, it will also change.
+	\\ \\
+	CLOCK\_MONOTONIC: Clock that cannot be set and represents monotonic time since some unspecified starting point. In the code it measures the monotonic real time spent to implement the $sleep(1)$. It is similar the the first clock type except it won't change even if we change the system time.
+	\\ \\
+	CLOCK\_PROCESS\_CPUTIME\_ID: High-resolution per-process timer from the CPU. This measures the 
+	\\ \\
+	CLOCK\_THREAD\_CPUTIME\_ID: Thread-specific CPU-time clock.
+	\\ \\
+	
+			
+\end{document}

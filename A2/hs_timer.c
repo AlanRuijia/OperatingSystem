@@ -18,7 +18,7 @@ int main()
     unsigned long long result; //64 bit integer
 
     clock_gettime(CLOCK_REALTIME, &start);
-    sleep(10);
+    sleep(1);
     clock_gettime(CLOCK_REALTIME, &stop);
 
     result=timespecDiff(&stop,&start);
@@ -26,7 +26,7 @@ int main()
     printf("CLOCK_REALTIME Measured: %llu\n",result);
 
     clock_gettime(CLOCK_MONOTONIC, &start);
-    sleep(10);
+    sleep(1);
     clock_gettime(CLOCK_MONOTONIC, &stop);
 
     result=timespecDiff(&stop,&start);
@@ -34,7 +34,7 @@ int main()
     printf("CLOCK_MONOTONIC Measured: %llu\n",result);
 
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
-    sleep(10);
+    sleep(1);
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
 
     result=timespecDiff(&stop,&start);
@@ -42,7 +42,7 @@ int main()
     printf("CLOCK_PROCESS_CPUTIME_ID Measured: %llu\n",result);
 
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &start);
-    sleep(10);
+    sleep(1);
     clock_gettime(CLOCK_THREAD_CPUTIME_ID, &stop);
 
     result=timespecDiff(&stop,&start);
