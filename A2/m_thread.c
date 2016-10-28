@@ -26,22 +26,25 @@ void* zero(void* unused)
 {
     pthread_mutex_lock(&lock);
     while (count == 0){
-        printf("waiting\n");
+        // printf("waiting\n");
         pthread_cond_wait(&cond_zero, &lock);
     }
+    // printf("in zero\n");
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
-    count = 1;
+    count = 0;
     pthread_mutex_unlock(&lock);
+    pthread_exit(NULL);
 }
 
 void* one(void* unused)
 {
     pthread_mutex_lock(&lock);
-    printf("in one\n");
-    count = 0;
+    // printf("in one\n");
+    count = 1;
     clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
     pthread_cond_signal(&cond_zero);
     pthread_mutex_unlock(&lock);
+    pthread_exit(NULL);
 }
 
 unsigned long long timespecDiff(struct timespec *timeA_p, struct timespec *timeB_p)
@@ -69,7 +72,7 @@ int main()
     CPU_SET( 0, &set );
     memset(&prio_param,0,sizeof(struct sched_param));
 
-    if (sched_setaffinity( getpid(), sizeof( cpu_set_t ), &set )){
+    if (sched_setaffinity(getpid(), sizeof( cpu_set_t ), &set )){
         perror( "sched_setaffinity" );
         exit(EXIT_FAILURE);
     }
@@ -78,18 +81,23 @@ int main()
         perror("sched_get_priority_max");
     }
 
-    prio_param.sched_priority = prio_max;
-    if( sched_setscheduler(getpid(),SCHED_FIFO,&prio_param) < 0 )
-    {
-        perror("sched_setscheduler");
-        exit(EXIT_FAILURE);
-    }
+    // prio_param.sched_priority = prio_max;
+    // if( sched_setscheduler(getpid(),SCHED_FIFO,&prio_param) < 0 )
+    // {
+    //     perror("sched_setscheduler");
+    //     exit(EXIT_FAILURE);
+    // }
 
     // pthread_attr_init(&attr);
-    pthread_create(&tid[0], NULL, one, NULL);
-    pthread_create(&tid[1], NULL, zero, NULL);
-    result = timespecDiff(&stop, &start); 
-    printf("CLOCK_MONOTONIC Measured: %llu\n",result/(2*MAX_ITER));
+    result = 0;
+    for (i = 0; i < MAX_ITER; i++){
+        pthread_create(&tid[0], NULL, zero, NULL);
+        pthread_create(&tid[1], NULL, one, NULL);
+        pthread_join(tid[0], NULL);
+        pthread_join(tid[1], NULL);
+        result += timespecDiff(&stop, &start); 
+    }
+    printf("CLOCK_MONOTONIC Measured: %llu\n",result/(MAX_ITER));
 
     return 0;
 }
