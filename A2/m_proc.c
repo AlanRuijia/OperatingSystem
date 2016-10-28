@@ -12,7 +12,7 @@
 #include <stdint.h>
 #include <time.h>
 
-#define MAX_ITER 100000
+#define MAX_ITER 10
 void dummy_func(){
 
 }
@@ -36,8 +36,8 @@ int main()
 
     int test = 0;
     
-    char in_str[2] = "A", in_str2[2] = "B";
-    char read_content[10];
+    char in_str[2] = "A";
+    char read_content[100];
 
     cpu_set_t set;
     struct sched_param prio_param;
@@ -48,7 +48,6 @@ int main()
     CPU_ZERO( &set );
     CPU_SET( 0, &set );
     memset(&prio_param,0,sizeof(struct sched_param));
-
     if (sched_setaffinity( getpid(), sizeof( cpu_set_t ), &set )){
         perror( "sched_setaffinity" );
         exit(EXIT_FAILURE);
@@ -78,29 +77,35 @@ int main()
             close(first_pipe[1]);
             read(first_pipe[0], read_content, sizeof(read_content));
             // printf("reading from fisrt pipe: %s\n", read_content);
+            clock_gettime(CLOCK_MONOTONIC, &stop);
+
             close(second_pipe[0]);
-            write(second_pipe[1], in_str2, strlen(in_str2)+1);
+            write(second_pipe[1], &stop, sizeof(stop));
 
             _exit(0);
         }else{
             //parent process
             close(first_pipe[0]);
-            write(first_pipe[1], in_str, strlen(in_str)+1);
             clock_gettime(CLOCK_MONOTONIC, &start);
-            
+            write(first_pipe[1], in_str, strlen(in_str)+1);
+
             wait(NULL);
             
             close(second_pipe[1]);
-            read(second_pipe[0], read_content, sizeof(read_content));
-            clock_gettime(CLOCK_MONOTONIC, &stop);
-            result += timespecDiff(&stop, &start); 
+            read(second_pipe[0], &stop, sizeof(stop));
+            result+=timespecDiff(&stop,&start);
             // printf("reading from second pipe: %s\n", read_content);
             
             close(second_pipe[0]);
             close(first_pipe[1]);
         }
     }
-    printf("CLOCK_MONOTONIC Measured: %llu\n",result/(2*MAX_ITER));
+    for (i = 0; i < MAX_ITER;i++){
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        clock_gettime(CLOCK_MONOTONIC, &stop);
+        result -= timespecDiff(&stop, &start); 
+    }
+    printf("CLOCK_MONOTONIC Measured: %llu\n",result/(MAX_ITER));
 
     return 0;
 }

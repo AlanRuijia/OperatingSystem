@@ -97,6 +97,11 @@ int main()
         pthread_join(tid[1], NULL);
         result += timespecDiff(&stop, &start); 
     }
+    for (i = 0; i < MAX_ITER;i++){
+        clock_gettime(CLOCK_MONOTONIC, &start);
+        clock_gettime(CLOCK_MONOTONIC, &stop);
+        result -= timespecDiff(&stop, &start); 
+    }
     printf("CLOCK_MONOTONIC Measured: %llu\n",result/(MAX_ITER));
 
     return 0;
