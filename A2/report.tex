@@ -16,13 +16,13 @@
 \newcommand{\myparagraph}[1]{\paragraph{#1}\mbox{}\\}
 \newcommand{\abs}[1]{\left\lvert#1\right\rvert}
 
-\title{CMPT 419 Assignment 2}
+\title{CMPT 300 Assignment 2}
 \author{Ruijia(Alan) Mao}
 
 \begin{document}
 	%Title
 	\begin{center}
-		\textbf{CMPT 419 Assignment 2 }
+		\textbf{CMPT 300 Assignment 2 }
 	\end{center}
 	
 	%author
@@ -31,17 +31,35 @@
 		\textbf{SFU ID: 301295769}
 	\end{flushright}
 	
-	\section{ }
-	The code basically measures $sleep(1)$ using different clock type using function $int\,clock_gettime(clockid_t clk_id, struct 	timespec *tp)$. The difference between these clock type are listed bellow:
+	\section{Code Explanation}
+	The answer to exercise 1 is in the comment of h\_timer.c.
+	\section{Measure Methods and Results}
+	In order to measure the time precisely without the overhead of the initialization of counter and for loop. I first loop for 100000 times and initialize two counters each time in for loop and perform the operation between two counters and then I just loop loop for 100000 times and initialize two counters each time in for loop and do nothing between the two counters. Then I subtract the two results and divide the difference by the number of iteration. 
+	\subsection{Function Call}
+	The time for a minimum function call is 0.1 ns in a csil machine and 0.4 - 0.6 ns in my laptop.
 	\\ \\
-	CLOCK\_REALTIME: System-wide realtime clock. In the code it measures the real time spent to implement the $sleep(1)$, if we change the system time during $sleep(1)$, it will also change.
+	I first call function $clock_gettime()$ with a CLOCK\_PROCESS\_CPUTIME\_ID counter to get the start time. And use a for loop to test the empty function call for 100000 times. And then call  function $clock_gettime()$ eith a CLOCK\_PROCESS\_CPUTIME\_ID counter to get the stop time. Result is computed by subtraction of the start and stop. 
 	\\ \\
-	CLOCK\_MONOTONIC: Clock that cannot be set and represents monotonic time since some unspecified starting point. In the code it measures the monotonic real time spent to implement the $sleep(1)$. It is similar the the first clock type except it won't change even if we change the system time.
+	And in order to reduce the overhead of initialization of clock and for loop, I also call function $clock_gettime()$ twice and do an idle for loop for 100000 times.
+	\subsection{System Call}
+	The time for a minimum function call is 2-3 ns in a csil machine and my laptop.
 	\\ \\
-	CLOCK\_PROCESS\_CPUTIME\_ID: High-resolution per-process timer from the CPU. This measures the 
+	I first call function $clock_gettime()$ with a CLOCK\_PROCESS\_CPUTIME\_ID counter to get the start time. And use a for loop to test the $getpid()$ which is the simplest system call for 100000 times. And then call  function $clock_gettime()$ eith a CLOCK\_PROCESS\_CPUTIME\_ID counter to get the stop time. Result is computed by subtraction of the start and stop. 
 	\\ \\
-	CLOCK\_THREAD\_CPUTIME\_ID: Thread-specific CPU-time clock.
+	And in order to reduce the overhead of initialization of clock and for loop, I also call function $clock_gettime()$ twice and do an idle for loop for 100000 times.
+	\subsection{Process Context Switch}
+	The time for a minimum function call is 1000-2000 ns in my laptop.
 	\\ \\
-	
+	I first use $sched_setaffinity()$ to set the running CPU to be one single CPU. Then, I call function $clock_gettime()$ with a CLOCK\_MONOTONIC counter to get the start time. I use $shed_yield()$ to complete context switch for 100000 times. And then I call function $clock_gettime()$ with a CLOCK\_MONOTONIC counter to get the stop time. Result is computed by subtraction of the start and stop.
+	\\ \\
+	And in order to reduce the overhead of initialization of clock and for loop, I also call function $clock_gettime()$ twice and do an idle for loop for 100000 times.
+	\\ \\
+	\subsection{Thread Context Switch}
+	The time for a minimum function call is 1000-2000 ns in my laptop.
+	\\ \\ 
+	I first use $sched_setaffinity()$ to set the running CPU to be one single CPU. Then, I call function $clock_gettime()$ with a CLOCK\_PROCESS\_CPUTIME\_ID counter to get the start time. I use functions $pthread_mutex_lock()$, $pthread_cond_wait()$ and $pthread_cond_signal()$ to implement the method described in a2.pdf to complete context switch for 100000 times. And then I call function $clock_gettime()$ with a CLOCK\_PROCESS\_CPUTIME\_ID counter to get the stop time. Result is computed by subtraction of the start and stop.
+	\\ \\
+	And in order to reduce the overhead of initialization of clock and for loop, I do an for loop for 100000 times and call function $clock_gettime()$ twice in the for loop.
+	\\ \\
 			
 \end{document}

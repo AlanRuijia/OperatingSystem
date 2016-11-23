@@ -14,9 +14,9 @@ static inline unsigned long cas(volatile unsigned long* ptr, unsigned long old, 
 
 }
 
-static inline unsigned long anf(volatile unsigned long* ptr, unsigned long val)//Compare and Swap
+static inline unsigned long anf(volatile int* ptr, int val)//Compare and Swap
 {
-    return __sync_add_and_fetch(ptr, val);
+    return __sync_fetch_and_add(ptr, val);
 
 }
 

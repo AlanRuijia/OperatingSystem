@@ -79,6 +79,7 @@ void *mySpinTest(){
 		for(k=0;k<workInsideCS;k++){  /*How much work is done inside the CS*/
 			c++;
 		}
+		// my_spinlock_unlock(&count_my_spin_lock);
 		my_spinlock_unlock(&count_my_spin_lock); 
 	
     } 
@@ -137,7 +138,6 @@ void *myQueueTest(){
 	int k;
 	
 	int localCount = 0;
-	printf("entering test");
     for(i=0;i<numIterations;i++)
     {
 		
@@ -146,10 +146,12 @@ void *myQueueTest(){
 		}
 
 		my_queuelock_lock(&count_my_queuelock);
+		// my_queuelock_lock(&count_my_queuelock);
 		for(k=0;k<workInsideCS;k++){  /*How much work is done inside the CS*/
 			c++;
 		}
-		my_queuelock_unlock(&count_my_queuelock); 
+		// my_queuelock_unlock(&count_my_queuelock); 
+		my_queuelock_unlock(&count_my_queuelock);
     } 
 }
 
@@ -290,10 +292,12 @@ int runTest(int testID)
 		printf("testID = 6\n");
 		my_queuelock_init(&count_my_queuelock);
 		c=0;
-		printf("Initialized count_my_queuelock to new serving %lld, next_ticket %lld\n", count_my_queuelock.now_serving, count_my_queuelock.next_ticket);
+		printf("Initialized count_my_queuelock to new serving %d, next_ticket %d\n", count_my_queuelock.now_serving, count_my_queuelock.next_ticket);
 		clock_gettime(CLOCK_MONOTONIC, &start);
+		// printf("vefore for loop\n");
 		for(i=0;i<numThreads;i++){
-			if( rt=(pthread_create(threads+i, NULL, &myMutexTest, NULL)) ){
+			// printf("creating thread\n");
+			if( rt=(pthread_create(threads+i, NULL, &myQueueTest, NULL)) ){
 				printf("Thread creation failed: %d\n", rt);
 				return -1;	
 			}

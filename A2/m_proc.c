@@ -43,6 +43,8 @@ int main()
     struct sched_param prio_param;
     int prio_max;
 
+    int shm_id = shmget(IPC_PRIVATE, sizeof(int), IPC_CREAT | 0666);
+
     pid_t pid;
 
     CPU_ZERO( &set );

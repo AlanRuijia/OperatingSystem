@@ -22,6 +22,7 @@
 struct my_mutex_struct {
     pid_t lock_thread;
     volatile unsigned long lock_value;
+    volatile int count;
 };
 
 
@@ -44,6 +45,7 @@ int my_mutex_trylock(my_mutex_t *lock);
 struct my_spinlock_struct {
     pid_t lock_thread;
     volatile unsigned long lock_value;
+    volatile int count;
 };
 
 typedef struct my_spinlock_struct my_spinlock_t;
@@ -61,7 +63,8 @@ int my_spinlock_trylock(my_spinlock_t *lock);
 
 struct my_queuelock_struct {
     pid_t lock_thread;
-    volatile unsigned long now_serving, next_ticket;
+    volatile int count;
+    volatile int now_serving, next_ticket;
 };
 
 typedef struct my_queuelock_struct my_queuelock_t;

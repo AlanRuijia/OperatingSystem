@@ -12,6 +12,9 @@
 #include <stdint.h>
 #include <time.h>
 #include <pthread.h>
+#include <sys/ipc.h>
+#include <sys/shm.h>
+#include <linux/futex.h>
 
 #define MAX_ITER 100000
 
@@ -75,22 +78,18 @@ int main()
     char read_content[10];
 
     cpu_set_t set;
-    struct sched_param prio_param;
-    int prio_max;
 
     pid_t pid;
+    int shm_id = shmget(IPC_PRIVATE, sizeof (int), IPC_CREAT | 0666);
+    int* futex = shmat(shm_id, NULL, 0);
+    *futex = 0xA;
 
     CPU_ZERO( &set );
     CPU_SET( 0, &set );
-    memset(&prio_param,0,sizeof(struct sched_param));
 
     if (sched_setaffinity(getpid(), sizeof( cpu_set_t ), &set )){
         perror( "sched_setaffinity" );
         exit(EXIT_FAILURE);
-    }
-
-    if( (prio_max = sched_get_priority_max(SCHED_FIFO)) < 0 ){
-        perror("sched_get_priority_max");
     }
 
     //------------------Function call--------------------------------
@@ -131,47 +130,44 @@ int main()
 
     //-------------------Process context swtich-------------------------------
     result = 0;
-    for (i = 0; i < MAX_ITER;i++){
-        if (pipe(first_pipe) == -1)
-            perror("Error: first pipe.");
-        if (pipe(second_pipe) == -1)
-            perror("Error: second pipe.");
-
-        if ((pid = fork()) == -1)
-            perror("Error: fork().");
-        else if (pid == 0){
-            //child process
-            close(first_pipe[1]);
-            read(first_pipe[0], read_content, sizeof(read_content));
-            // printf("reading from fisrt pipe: %s\n", read_content);
-            close(second_pipe[0]);
-            write(second_pipe[1], in_str2, strlen(in_str2)+1);
-            
-            _exit(0);
-        }else{
-            //parent process
-            close(first_pipe[0]);
-            write(first_pipe[1], in_str, strlen(in_str)+1);
-            clock_gettime(CLOCK_MONOTONIC, &start);
-            
-            wait(NULL);
-            
-            close(second_pipe[1]);
-            read(second_pipe[0], read_content, sizeof(read_content));
-            clock_gettime(CLOCK_MONOTONIC, &stop);
-            result += timespecDiff(&stop, &start); 
-            // printf("reading from second pipe: %s\n", read_content);
-            
-            close(second_pipe[0]);
-            close(first_pipe[1]);
+    if ((pid = fork()) == -1)
+        perror("Error: fork().");
+    else if (pid == 0){
+        //child process
+        for (i = 0; i < MAX_ITER;i++){
+            sched_yield();
+            while (syscall(SYS_futex, futex, FUTEX_WAIT, 0xA, NULL, NULL, 42)) {
+                sched_yield();
+            }
+            *futex = 0xB;
+            while (!syscall(SYS_futex, futex, FUTEX_WAKE, 1, NULL, NULL, 42)) {
+                sched_yield();
+            }
         }
-    }
-    for (i = 0; i < MAX_ITER;i++){
+        return 0;
+    }else{
+        //parent process
         clock_gettime(CLOCK_MONOTONIC, &start);
+        for (i = 0; i < MAX_ITER;i++){
+            *futex = 0xA;
+            while (!syscall(SYS_futex, futex, FUTEX_WAKE, 1, NULL, NULL, 42)) {
+                sched_yield();
+            }
+            sched_yield();
+            while (syscall(SYS_futex, futex, FUTEX_WAIT, 0xB, NULL, NULL, 42)) {
+                sched_yield();
+            }
+        }
         clock_gettime(CLOCK_MONOTONIC, &stop);
-        result -= timespecDiff(&stop, &start); 
+        result = timespecDiff(&stop, &start);
+
+        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &start);
+        for (i = 0;i < MAX_ITER;i++);
+        clock_gettime(CLOCK_PROCESS_CPUTIME_ID, &stop);
+        result-=timespecDiff(&stop,&start); 
+        
+        printf("Process context swtich CLOCK_MONOTONIC Measured: %llu\n",result/(4*MAX_ITER));
     }
-    printf("Process context swtich CLOCK_MONOTONIC Measured: %llu\n",result/(2*MAX_ITER));
 
     //--------------------------------------------------
     result = 0;
