@@ -230,7 +230,7 @@ int runTest(int testID)
 		}
 		clock_gettime(CLOCK_MONOTONIC, &stop);
 
-		printf("Threaded Run Pthread (Spin) Total Count: %lld\n", c);
+		printf("Threaded Run Spinlock TAS  Total Count: %lld\n", c);
 		result=timespecDiff(&stop,&start);
 		printf("Pthread Spin time(ms): %llu\n",result/1000000);
 	}
@@ -255,7 +255,7 @@ int runTest(int testID)
 		}
 		clock_gettime(CLOCK_MONOTONIC, &stop);
 
-		printf("Threaded Run Pthread (Spin) Total Count: %lld\n", c);
+		printf("Threaded Run Spin TTAS Total Count: %lld\n", c);
 		result=timespecDiff(&stop,&start);
 		printf("Pthread Spin time(ms): %llu\n",result/1000000);
 	}
@@ -280,7 +280,7 @@ int runTest(int testID)
 		}
 		clock_gettime(CLOCK_MONOTONIC, &stop);
 
-		printf("Threaded Run Pthread (Spin) Total Count: %lld\n", c);
+		printf("Threaded Run My Mutex Total Count: %lld\n", c);
 		result=timespecDiff(&stop,&start);
 		printf("Pthread Spin time(ms): %llu\n",result/1000000);
 	}
@@ -304,7 +304,7 @@ int runTest(int testID)
 		}
 		clock_gettime(CLOCK_MONOTONIC, &stop);
 
-		printf("Threaded Run Pthread (Spin) Total Count: %lld\n", c);
+		printf("Threaded Run my queuelock Total Count: %lld\n", c);
 		result=timespecDiff(&stop,&start);
 		printf("Pthread Spin time(ms): %llu\n",result/1000000);
 	}

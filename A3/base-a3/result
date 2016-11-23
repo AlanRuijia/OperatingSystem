@@ -1,0 +1,196 @@
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 4000000
+Pthread Mutex time(ms): 760
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 4000000
+Pthread Spin time(ms): 261
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 4000000
+Pthread Spin time(ms): 1055
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 4000000
+Pthread Spin time(ms): 505
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 4000000
+Pthread Spin time(ms): 453
+testID = 6
+Initialized count_my_queuelock to new serving 0, next_ticket 0
+Threaded Run my queuelock Total Count: 4000000
+Pthread Spin time(ms): 430
+rma61@asb9812u-01:~/OperatingSystem/A3/base-a3$ ./mylocks -d 0 -t 16
+Usage of: ./mylocks -t #threads -i #Iterations -o #OperationsOutsideCS -c #OperationsInsideCS -d testid
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Set numThreads to 16
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 16000000
+Pthread Mutex time(ms): 3046
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 16000000
+Pthread Spin time(ms): 2474
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 16000000
+Pthread Spin time(ms): 6320
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 16000000
+Pthread Spin time(ms): 4221
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 16000000
+Pthread Spin time(ms): 1904
+testID = 6
+Initialized count_my_queuelock to new serving 0, next_ticket 0
+Threaded Run my queuelock Total Count: 16000000
+Pthread Spin time(ms): 2748
+rma61@asb9812u-01:~/OperatingSystem/A3/base-a3$ ./mylocks -d 0 -o 100 -t 16
+Usage of: ./mylocks -t #threads -i #Iterations -o #OperationsOutsideCS -c #OperationsInsideCS -d testid
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Set workOutsideCS to 100
+Set numThreads to 16
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 16000000
+Pthread Mutex time(ms): 4036
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 16000000
+Pthread Spin time(ms): 3340
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 16000000
+Pthread Spin time(ms): 6857
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 16000000
+Pthread Spin time(ms): 3837
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 16000000
+Pthread Spin time(ms): 10013
+testID = 6
+Initialized count_my_queuelock to new serving 0, next_ticket 0
+Threaded Run my queuelock Total Count: 16000000
+Pthread Spin time(ms): 9720
+rma61@asb9812u-01:~/OperatingSystem/A3/base-a3$ ./mylocks -d 0 -o 100 -c 100 -t 16
+Usage of: ./mylocks -t #threads -i #Iterations -o #OperationsOutsideCS -c #OperationsInsideCS -d testid
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Set workOutsideCS to 100
+Set workInsideCS to 100
+Set numThreads to 16
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 1600000000
+Pthread Mutex time(ms): 11520
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 1600000000
+Pthread Spin time(ms): 7360
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 1600000000
+Pthread Spin time(ms): 21080
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 1600000000
+Pthread Spin time(ms): 9452
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 1600000000
+Pthread Spin time(ms): 34097
+testID = 6
+Initialized count_my_queuelock to new serving 0, next_ticket 0
+Threaded Run my queuelock Total Count: 1600000000
+Pthread Spin time(ms): 33952
+rma61@asb9812u-01:~/OperatingSystem/A3/base-a3$ ./mylocks -d 0 -i 10000  -o 100 -c 100 -t 32
+Usage of: ./mylocks -t #threads -i #Iterations -o #OperationsOutsideCS -c #OperationsInsideCS -d testid
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Set numIterations to 10000
+Set workOutsideCS to 100
+Set workInsideCS to 100
+Set numThreads to 32
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 32000000
+Pthread Mutex time(ms): 236
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 32000000
+Pthread Spin time(ms): 215
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 32000000
+Pthread Spin time(ms): 728
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 32000000
+Pthread Spin time(ms): 260
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 32000000
+Pthread Spin time(ms): 4635
+testID = 6
+Initialized count_my_queuelock to new serving 0, next_ticket 0
+Threaded Run my queuelock Total Count: 32000000
+Pthread Spin time(ms): 3469
+rma61@asb9812u-01:~/OperatingSystem/A3/base-a3$ ./mylocks -d 0 -i 10000  -o 100 -c 100 -t 4
+Usage of: ./mylocks -t #threads -i #Iterations -o #OperationsOutsideCS -c #OperationsInsideCS -d testid
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Set numIterations to 10000
+Set workOutsideCS to 100
+Set workInsideCS to 100
+Set numThreads to 4
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 4000000
+Pthread Mutex time(ms): 29
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 4000000
+Pthread Spin time(ms): 13
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 4000000
+Pthread Spin time(ms): 25
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 4000000
+Pthread Spin time(ms): 12
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 4000000
+Pthread Spin time(ms): 11
+testID = 6
+Initialized count_my_queuelock to new serving 0, next_ticket 0
+Threaded Run my queuelock Total Count: 4000000
+Pthread Spin time(ms): 14
+rma61@asb9812u-01:~/OperatingSystem/A3/base-a3$ ./mylocks -d 0 -i 1000000  -o 100 -c 100 -t 4
+Usage of: ./mylocks -t #threads -i #Iterations -o #OperationsOutsideCS -c #OperationsInsideCS -d testid
+testid: 0=all, 1=pthreadMutex, 2=pthreadSpinlock, 3=mySpinLockTAS, 4=mySpinLockTTAS, 5=myMutexTAS, 6=myQueueLock, 
+Set testID to 0
+Set numIterations to 1000000
+Set workOutsideCS to 100
+Set workInsideCS to 100
+Set numThreads to 4
+Begin runTest()
+Threaded Run Pthread (Mutex) Total Count: 400000000
+Pthread Mutex time(ms): 2480
+testID = 2
+Threaded Run Pthread (Spin) Total Count: 400000000
+Pthread Spin time(ms): 1185
+testID = 3
+Initialized
+Threaded Run Spinlock TAS  Total Count: 400000000
+Pthread Spin time(ms): 2534
+testID = 4
+Initialized
+Threaded Run Spin TTAS Total Count: 400000000
+Pthread Spin time(ms): 1367
+testID = 5
+Initialized
+Threaded Run My Mutex Total Count: 400000000
+Pthread Spin time(ms): 1347
+testID = 6
+
