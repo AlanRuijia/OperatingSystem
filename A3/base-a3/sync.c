@@ -170,10 +170,10 @@ int my_mutex_lock(my_mutex_t *lock){
     long delay = MIN_DELAY;
     
     struct timespec req, rem;
-    // if (lock -> lock_thread == syscall(SYS_gettid)){
-    //     lock -> count++;
-    //     return 0;
-    // }
+    if (lock -> lock_thread == syscall(SYS_gettid)){
+        lock -> count++;
+        return 0;
+    }
     req.tv_sec = 0;
     req.tv_nsec = 0;
     while (1){
@@ -257,6 +257,8 @@ int my_queuelock_unlock(my_queuelock_t *lock){
                 lock -> now_serving = 0;
                 return 0;
             }
+            lock -> count = 0;
+            lock -> lock_thread = -1;
             lock -> now_serving++;
         }   
         return 0;
@@ -269,20 +271,16 @@ int my_queuelock_unlock(my_queuelock_t *lock){
 
 int my_queuelock_lock(my_queuelock_t *lock){ 
     unsigned long my_ticket;
-    // printf("entering lock\n");
-    // if (lock -> lock_thread == syscall(SYS_gettid)){
-    //     lock -> count++;
-    //     return 0;
-    // }
-    // printf("after if\n");
+    if (lock -> lock_thread == syscall(SYS_gettid)){
+        lock -> count++;
+        return 0;
+    }
     my_ticket = anf(&lock -> next_ticket, 1);
-    // printf("after anf\n");
     if (lock -> next_ticket == INT_MAX)
         lock -> next_ticket = 0;
     while(lock -> now_serving != my_ticket) 
         ;
     lock -> lock_thread = syscall(SYS_gettid);
-    // printf("exiting lock\n");
     return 0;
 
 }
